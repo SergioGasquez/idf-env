@@ -1,4 +1,4 @@
-name: sign-espup
+name: Sign espup artifact
 
 on:
   workflow_dispatch:
@@ -6,6 +6,7 @@ on:
       release-version:
         description: EspUp release version
         required: true
+        default: latest
 env:
   CARGO_TERM_COLOR: always
 
@@ -16,23 +17,18 @@ jobs:
     steps:
       - name: Checkout idf-env repo
         uses: actions/checkout@v3
-      - name: Checkout espup repository
-        uses: actions/checkout@v2
+      - name: Get artifact
+        if: inputs.release-version == 'latest'
+        uses: robinraju/release-downloader@v1.6
         with:
-          repository: esp-rs/espup
-          ref: ${{ inputs.release-version }}
-      - name: Install Rust toolchain
-        uses: actions-rs/toolchain@v1
+          latest: true
+          fileName: espup-x86_64-pc-windows-msvc.exe
+      - name: Get artifact
+        if: inputs.release-version != 'latest'
+        uses: robinraju/release-downloader@v1.6
         with:
-          toolchain: stable
-          profile: minimal
-          target: x86_64-pc-windows-msvc
-          override: true
-      - name: Cargo build
-        uses: actions-rs/cargo@v1
-        with:
-          command: build
-          args: --release
+          tag: ${{ inputs.release-version }}
+          fileName: espup-x86_64-pc-windows-msvc.exe
       - name: Sign artifact
         env:
           CERTIFICATE: ${{ secrets.CERTIFICATE }}
