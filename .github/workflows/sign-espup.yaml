@@ -21,12 +21,14 @@ jobs:
         if: inputs.release-version == 'latest'
         uses: robinraju/release-downloader@v1.6
         with:
+          repository: "esp-rs/espup"
           latest: true
           fileName: espup-x86_64-pc-windows-msvc.exe
       - name: Get artifact
         if: inputs.release-version != 'latest'
         uses: robinraju/release-downloader@v1.6
         with:
+          repository: "esp-rs/espup"
           tag: ${{ inputs.release-version }}
           fileName: espup-x86_64-pc-windows-msvc.exe
       - name: Sign artifact
