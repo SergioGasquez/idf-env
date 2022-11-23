@@ -14,7 +14,9 @@ jobs:
     name: Sign EspUp release
     runs-on: windows-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout idf-env repo
+        uses: actions/checkout@v3
+      - name: Checkout espup repository
         uses: actions/checkout@v2
         with:
           repository: esp-rs/espup
